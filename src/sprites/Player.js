@@ -13,9 +13,9 @@ export default class Player extends Phaser.GameObjects.Sprite {
 
         this.type = 'player';
         this.isFloor = false;
-        this.body.gravity.y = 800;
+        this.body.gravity.x = 0;
         this.body.gravity.y = 0;
-        this.jumpPower = -600;
+        this.wirePower = 2;
         this.countTouch = 0;
         this.jumpTimer = 0;
         this.jumping = false;
@@ -23,59 +23,13 @@ export default class Player extends Phaser.GameObjects.Sprite {
         this.derection = "right";
         this.isDamege = false;
         this.hp = 100;
+        this.rx = 0;
+        this.ry = 0;
+
 
         this.scene.anims.create({
             key: 'waitLeftAnime',
             frames: this.scene.anims.generateFrameNumbers(config.key, { start: 7, end: 7 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.scene.anims.create({
-            key: 'runLeftAnime',
-            frames: this.scene.anims.generateFrameNumbers(config.key, { start: 3, end: 4 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.scene.anims.create({
-            key: 'jumpLeftAnime',
-            frames: this.scene.anims.generateFrameNumbers(config.key, { start: 2, end: 2 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.scene.anims.create({
-            key: 'damageLeftAnime',
-            frames: this.scene.anims.generateFrameNumbers(config.key, { start: 0, end: 1 }),
-            frameRate: 4,
-            repeat: -1
-        });
-
-        this.scene.anims.create({
-            key: 'waitRightAnime',
-            frames: this.scene.anims.generateFrameNumbers(config.key, { start: 8, end: 8 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.scene.anims.create({
-            key: 'runRightAnime',
-            frames: this.scene.anims.generateFrameNumbers(config.key, { start: 10, end: 12 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.scene.anims.create({
-            key: 'jumpRightAnime',
-            frames: this.scene.anims.generateFrameNumbers(config.key, { start: 13, end: 13 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.scene.anims.create({
-            key: 'damageRightAnime',
-            frames: this.scene.anims.generateFrameNumbers(config.key, { start: 14, end: 15 }),
-            frameRate: 4,
-            repeat: -1
-        });
-        this.scene.anims.create({
-            key: 'shotAnime',
-            frames: this.scene.anims.generateFrameNumbers(config.key, { start: 16, end: 16 }),
             frameRate: 10,
             repeat: -1
         });
@@ -85,10 +39,18 @@ export default class Player extends Phaser.GameObjects.Sprite {
             frameRate: 10,
             repeat: 0
         });
+
+      this.graph = this.scene.add.graphics({ lineStyle: { width: 4, color: 0xaa00aa } });
+      this.graph.lineStyle(2, 0x00aa00);
+
+      this.arrow = this.scene.add.graphics({ lineStyle: { width: 4, color: 0x00FF00 } });
+      this.arrow.lineStyle(2, 0x00FF00);
+
+      this.normalAngle;
+
     }
+
     create(){
-      // this.scene.physics.world.collide(this, this.scene.groundLayer, this.scene.tileCollision);
-      // this.physics.world.add.collider(this, this.scene.groundLayer, this.scene.tileCollision);
       this.physics.add.collider(this, this.scene.enemyGroup, this.scene.tileCollision,
         function(player, enemy){
           player.damage();
@@ -99,76 +61,63 @@ export default class Player extends Phaser.GameObjects.Sprite {
 
     update(keys, time, delta) {
 
+      this.anims.play('waitLeftAnime', true);
+
       this.jumpTimer -= delta;
 
-      if(keys.isTOUCH === true && this.isFloor === false && this.countTouch == 0){  
-        this.laser();
-      }
-      if(keys.isTOUCH === false && this.isFloor == true){
-        this.jumping = false;
-        this.countTouch = 0;
-      }
-      //ジャンプ
+
+
       if(keys.isTOUCH === true){
-        this.jump();
-      }
-      if(keys.isTOUCH === false){
-        this.countTouch = 0;
-        this.jumpTimer = 600;
-      }
-      this.body.setVelocityX(keys.DIRECTION* 100);
+        this.graph.clear();
+        this.graph.lineBetween(
+          keys.TOUCH_START_X,
+          keys.TOUCH_START_Y,
+          keys.TOUCH_MOVE_X,
+          keys.TOUCH_MOVE_Y
+        );
 
-      
-      if(keys.DIRECTION < 0 && this.isDamege == false){
-        //左に進むアニメーション
-        this.anims.play('runLeftAnime', true);
-        this.derection = "left";
-      }else if(keys.DIRECTION > 0 && this.isDamege == false){
-        //右に進むアニメーション
-        this.anims.play('runRightAnime', true);
-        this.derection = "right";
+        /*
+        https://proglight.jimdo.com/programs/java/monsterstrike/
+        引っ張り始めた点(px,py)　(keys.TOUCH_START_X,keys.TOUCH_START_Y)
+        引っ張って放した点(fx,fy)(keys.TOUCH_MOVE_X,keys.TOUCH_MOVE_Y)
+        進むべき方向(rx,ry)
+        rx = -1 * (fx - px) = px - fx
+        ry = -1 * (fy - py) = py - fy
+        */
+        this.rx = keys.TOUCH_START_X - keys.TOUCH_MOVE_X;
+        this.ry = keys.TOUCH_START_Y - keys.TOUCH_MOVE_Y;
+
       }
+      console.log("keys.isRELEASE="+keys.isRELEASE);
 
 
-      if(this.jumping === true && this.isFloor === false && this.isDamege == false){
-        if(this.derection === "left"){
-          this.anims.play('jumpLeftAnime', true);
-        }
-        if(this.derection === "right"){
-          this.anims.play('jumpRightAnime', true);
-        }
-        
-      }
-      if(keys.DIRECTION === 0 && this.jumping == false && this.isDamege == false){
-        if(this.derection === "left"){
-          this.anims.play('waitLeftAnime', true);
-        }
-        if(this.derection === "right"){
-          this.anims.play('waitRightAnime', true);
-        }
+      // console.log("velocity.x="+this.body.velocity.x+"/velocity.y="+this.body.velocity.y);
+
+      if(keys.isTOUCH === false && keys.isRELEASE === true){
+        this.body.setVelocityX(this.rx*this.wirePower);
+        this.body.setVelocityY(this.ry*this.wirePower);
       }
 
-      this.isDamege = false;
+      if(this.isFloor === true){
+
+        keys.isRELEASE = false;
+
+        this.body.velocity.x = 0;
+        this.body.velocity.y = 0;
+
+      }else{
+
+        this.body.gravity.y = -800;
+
+      }
+
+      if(this.body.velocity.x !== 0 || this.body.velocity.y !== 0){
+        // keys.isRELEASE = false;
+        // console.log("aaaaaaaaa");
+      }
 
     }
 
-
-    jump() {
-      if (this.jumping === false) {
-          this.jumpTimer = 600;
-      }
-
-      if(this.jumpTimer >= 0){
-        this.body.setVelocityY(this.jumpPower);
-      }
-
-      this.jumping = true;
-
-      if(this.body.velocity.y <= 0){
-        this.body.velocity.y = this.body.velocity.y*0.5;
-        this.body.gravity.y = 0;   
-      }
-    }
     laser(){
       var laser = new Laser({
         scene: this.scene,

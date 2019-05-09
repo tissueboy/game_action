@@ -2,7 +2,7 @@
  "infinite":false,
  "layers":[
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+         "data":[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
          "height":20,
          "id":2,
          "name":"ground",
@@ -19,49 +19,41 @@
          "name":"enemies",
          "objects":[
                 {
-                 "gid":8,
-                 "height":64,
-                 "id":12,
+                 "height":0,
+                 "id":19,
+                 "name":"brain",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":352,
+                 "y":192
+                }, 
+                {
+                 "height":0,
+                 "id":20,
                  "name":"ika",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":64,
-                 "x":168,
-                 "y":356
-                }, 
-                {
-                 "gid":10,
-                 "height":64,
-                 "id":13,
-                 "name":"nou",
-                 "rotation":0,
-                 "type":"nou_1",
-                 "visible":true,
-                 "width":64,
-                 "x":460,
-                 "y":640
-                }, 
-                {
-                 "gid":12,
-                 "height":64,
-                 "id":14,
-                 "name":"cloud",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":64,
-                 "x":556,
-                 "y":152
+                 "width":0,
+                 "x":248,
+                 "y":756
                 }],
          "opacity":1,
+         "properties":[
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"brain"
+                }],
          "type":"objectgroup",
          "visible":true,
          "x":0,
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":18,
+ "nextobjectid":22,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.2.3",
@@ -70,7 +62,7 @@
         {
          "columns":12,
          "firstgid":1,
-         "image":"game_action\/assets\/images\/tilesets.png",
+         "image":"..\/git\/game_action\/assets\/images\/tilesets.png",
          "imageheight":64,
          "imagewidth":768,
          "margin":0,
@@ -78,36 +70,6 @@
          "spacing":0,
          "tilecount":12,
          "tileheight":64,
-         "tiles":[
-                {
-                 "id":0,
-                 "properties":[
-                        {
-                         "name":"collide",
-                         "type":"bool",
-                         "value":false
-                        }],
-                 "type":"block1"
-                }, 
-                {
-                 "id":7,
-                 "properties":[
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"ika"
-                        }],
-                 "type":"ika_1"
-                }, 
-                {
-                 "id":9,
-                 "properties":[
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"nou"
-                        }]
-                }],
          "tilewidth":64
         }],
  "tilewidth":64,

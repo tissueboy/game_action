@@ -35,8 +35,8 @@ class GameScene extends Phaser.Scene {
       this.player = new Player({
           scene: this,
           key: 'player',
-          x: 0,
-          y: 0,
+          x: 100,
+          y: 100,
           isFloor: false,
       });
 
@@ -68,22 +68,33 @@ class GameScene extends Phaser.Scene {
           jump: false,
           TOUCH_START_X: 0,
           TOUCH_START_Y: 0,
+          TOUCH_MOVE_X: 0,
+          TOUCH_MOVE_Y: 0,
           isTOUCH: false,
-          DIRECTION: 0
+          DIRECTION: 0,
+          isRELEASE: false
       };
 
       this.input.on('pointerdown', function (pointer) {
         this.keys.TOUCH_START_X = pointer.x;
+        this.keys.TOUCH_START_Y = pointer.y;
         this.keys.isTOUCH = true;
+        // this.keys.isRELEASE = false;
       }, this);
 
       this.input.on('pointerup', function (pointer) {
-        this.keys.TOUCH_START_X = 0;
-        this.keys.DIRECTION = 0;
         this.keys.isTOUCH = false;
+        this.keys.isRELEASE = true;
+        this.keys.TOUCH_START_X = 0;
+        this.keys.TOUCH_START_Y = 0;
+        this.keys.DIRECTION = 0;
       }, this);
+
+
   
       this.input.on('pointermove', function (pointer) {
+        this.keys.TOUCH_MOVE_X = pointer.x;
+        this.keys.TOUCH_MOVE_Y = pointer.y;
         if(this.keys.isTOUCH == true){
           // 左に移動
           if( ( this.keys.TOUCH_START_X - pointer.x ) > 10 ){
@@ -135,7 +146,7 @@ class GameScene extends Phaser.Scene {
     }
     tileCollision(sprite, tile){
       sprite.isFloor = true;
-      console.log("tileCollision");
+      // console.log("tileCollision");
     }
     parseObjectLayers() {
         console.log(this.tileset);
