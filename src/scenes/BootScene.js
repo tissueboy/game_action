@@ -24,6 +24,8 @@ class BootScene extends Phaser.Scene {
             this.scene.start('GameScene');
         });
 
+        this.load.image('lemming', 'assets/images/bomb.png');
+
         this.load.image('tiles', 'assets/images/tilesets.png');
         this.load.tilemapTiledJSON('map', 'assets/images/tilemap.json');
         //spritesheetは画像のサイズを合わせないとframe errorになる...

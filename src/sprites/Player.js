@@ -13,6 +13,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
 
         this.type = 'player';
         this.isFloor = false;
+
         this.body.gravity.x = 0;
         this.body.gravity.y = 0;
         this.wirePower = 2;
@@ -25,19 +26,25 @@ export default class Player extends Phaser.GameObjects.Sprite {
         this.hp = 100;
         this.rx = 0;
         this.ry = 0;
+        this.attackPoint = 1;
+        // this.body.isCircle= true;
+        this.beforeVecX = 0;
+        this.beforeVecY = 0;
+        // this.body.setOffset(10, 10, 10, 10);
+
 
 
         this.scene.anims.create({
-            key: 'waitLeftAnime',
-            frames: this.scene.anims.generateFrameNumbers(config.key, { start: 7, end: 7 }),
-            frameRate: 10,
-            repeat: -1
+          key: 'waitLeftAnime',
+          frames: this.scene.anims.generateFrameNumbers(config.key, { start: 7, end: 7 }),
+          frameRate: 10,
+          repeat: -1
         });
         this.scene.anims.create({
-            key: 'explosionAnime',
-            frames: this.scene.anims.generateFrameNumbers('explosion', { start: 0, end: 16 }),
-            frameRate: 10,
-            repeat: 0
+          key: 'explosionAnime',
+          frames: this.scene.anims.generateFrameNumbers('explosion', { start: 0, end: 16 }),
+          frameRate: 10,
+          repeat: 0
         });
 
       this.graph = this.scene.add.graphics({ lineStyle: { width: 4, color: 0xaa00aa } });
@@ -61,11 +68,15 @@ export default class Player extends Phaser.GameObjects.Sprite {
 
     update(keys, time, delta) {
 
-      this.anims.play('waitLeftAnime', true);
+      console.log("this.alive="+this.alive);
+
+      if(this.alive === false){
+        return;
+      }else{
+        this.anims.play('waitLeftAnime', true);
+      }
 
       this.jumpTimer -= delta;
-
-
 
       if(keys.isTOUCH === true){
         this.graph.clear();
@@ -88,19 +99,37 @@ export default class Player extends Phaser.GameObjects.Sprite {
         this.ry = keys.TOUCH_START_Y - keys.TOUCH_MOVE_Y;
 
       }
-      console.log("keys.isRELEASE="+keys.isRELEASE);
+      // console.log("keys.isRELEASE="+keys.isRELEASE);
 
 
       // console.log("velocity.x="+this.body.velocity.x+"/velocity.y="+this.body.velocity.y);
 
+
+
       if(keys.isTOUCH === false && keys.isRELEASE === true){
-        this.body.setVelocityX(this.rx*this.wirePower);
-        this.body.setVelocityY(this.ry*this.wirePower);
+        //反射ありの場合
+        // if(this.beforeVecX !== 0 || this.beforeVecY !== 0){
+
+        //   // this.beforeVecX = this.beforeVecX*-1;
+
+        //   this.body.setVelocityX(this.beforeVecX);
+        //   this.body.setVelocityY(this.beforeVecY);  
+
+        // }else{
+          this.body.setVelocityX(this.rx*this.wirePower);
+          this.body.setVelocityY(this.ry*this.wirePower);
+        // }
+
       }
+
+
 
       if(this.isFloor === true){
 
+        // console.log("keys.isTOUCH");
+
         keys.isRELEASE = false;
+
 
         this.body.velocity.x = 0;
         this.body.velocity.y = 0;
@@ -140,9 +169,11 @@ export default class Player extends Phaser.GameObjects.Sprite {
     }
     explode(){
       this.anims.play('explosionAnime', true);
+      this.alive = false;
       this.on('animationcomplete', function() {
-        this.alive = false;
-        this.destroy();
+        console.log("animationcomplete");
+        
+        // this.destroy();
       });
     }
     collide(obj){

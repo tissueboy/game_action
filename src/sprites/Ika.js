@@ -17,7 +17,17 @@ export default class Ika extends Enemy {
         repeat: 0
     });
     this.anims.play('waitIkaAnime', true);
+
+    this.hp = 1;
+
+    this.moveArea = 40;
+    this.dispPositionX_Left  = this.x - this.moveArea;
+    this.dispPositionX_Right = this.x;
+    this.dispPositionY_Left  = this.y - this.moveArea;
+    this.dispPositionY_Right = this.y + this.moveArea;
+    
   }
+
   activated() {
       if (!this.alive) {
           return false;
@@ -42,8 +52,16 @@ export default class Ika extends Enemy {
       }
       return true;
   }
+
+
+  // collide(){
+  //   console.log("attack!!!!!!!!!!!!!!");
+  //   this.scene.player
+  // }
+
   update(){
     if(!this.activated()){
     }
   }
+
 }

@@ -3,6 +3,9 @@ import Laser from '../sprites/Laser';
 import Player from '../sprites/Player';
 import Enemy from '../sprites/Enemy';
 import Ika from '../sprites/Ika';
+import Brain from '../sprites/Brain';
+import Item from '../sprites/Item';
+import Heart from '../sprites/Heart';
 // import Fire from '../sprites/Fire';
 
 class GameScene extends Phaser.Scene {
@@ -21,13 +24,21 @@ class GameScene extends Phaser.Scene {
 
       // this.groundLayer = this.map.createStaticLayer("ground", this.tileset, 0, 0);
       this.groundLayer = this.map.createDynamicLayer('ground', this.tileset, 0, 0);
-      this.groundLayer.type ="layer_type";
-
-      this.groundLayer.setCollisionBetween(1, 3);
+      this.groundLayer.setCollisionBetween(0, 2);
       this.groundLayer.setCollisionByProperty({ collides: true });
 
 
+
+      this.actionLayer = this.map.createDynamicLayer('action', this.tileset, 0, 0);
+      this.actionLayer.setCollisionBetween(3, 5);
+      this.actionLayer.setCollisionByProperty({ collides: true });
+
+
+
+
       this.enemyGroup = this.add.group();
+
+      this.itemGroup = this.add.group();
 
       this.parseObjectLayers();
 
@@ -50,19 +61,12 @@ class GameScene extends Phaser.Scene {
 
       this.physics.add.collider(this.player, this.groundLayer, this.tileCollision);
 
-      this.physics.add.collider(this.player, this.enemyGroup, this.tileCollision,
-        function(player, enemy){
-          player.damage();
-          player.collide(enemy);
-        }
-      );
+      this.physics.add.overlap(this.player, this.actionLayer);
 
-      // this.physics.add.collider(this.playerLasers,this.enemyGroup, this.tileCollision,
-      //   function(playerLaser, enemy) {
-      //     playerLaser.explode();
-      //     enemy.collide(playerLaser);
-      //   }
-      // );
+      this.actionLayer.setTileIndexCallback(3, this.hitCoin, this.player);
+
+      this.actionLayer.setTileIndexCallback(4, this.hitCoin, this.player);
+
 
       this.keys = {
           jump: false,
@@ -111,6 +115,8 @@ class GameScene extends Phaser.Scene {
         }
 
       }, this);
+
+
       this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
 
       this.cameras.main.startFollow(this.player, true, 0.5, 0.5);
@@ -121,8 +127,12 @@ class GameScene extends Phaser.Scene {
 
       // this.scene.add.text(12, 12, 'Score: 0', { font: "24px", fill: "#000" });
 
-      this.scoreText = this.add.text(100, 100, this.score);
-      this.hpText = this.add.text(400, 100, this.player.hp);
+      this.scoreText = this.add.text(100, 100, this.score).setScrollFactor(0, 0);
+      this.hpText = this.add.text(400, 100, this.player.hp).setScrollFactor(0, 0);
+
+      this.flg_attack = false;
+      this.attack_count = 0;
+
 
     }
     update(time, delta) {
@@ -131,11 +141,52 @@ class GameScene extends Phaser.Scene {
 
       this.player.isFloor = false;
 
+
+
       this.enemyGroup.children.entries.forEach(
           (sprite) => {
               sprite.update(time, delta);
           }
       );
+
+      if(this.collideCheck() === true){
+        if(this.attack_count < 1){   
+          this.physics.world.overlap(this.player, this.enemyGroup,
+            function(player,enemy){
+              enemy.collide(player,enemy);
+            }
+          );
+        }
+        this.attack_count++;
+      }else{
+        this.attack_count = 0;
+      }
+      this.physics.world.overlap(this.player,this.itemGroup,
+        function( player,item){
+          console.log("overlap");
+          item.hasEffect(player,item);
+        }
+      );
+      // this.itemGroup.children.entries.forEach(
+      //     (sprite) => {
+      //         sprite.update(time, delta);
+      //     }
+      // );
+
+    }
+
+    collideCheck(){
+
+      var flg = false;
+      this.physics.world.overlap(this.player, this.enemyGroup,
+        function(player,enemy){
+          flg = true;
+        }
+      );
+      // console.log("this.collideCheck() flg="+flg);
+
+      return flg;
+
     }
     updateScore(score){
       this.scoreText.text = Number(this.scoreText.text) + Number(score);
@@ -144,9 +195,38 @@ class GameScene extends Phaser.Scene {
       // console.log("updateHp");
       this.hpText.text = Number(hp);      
     }
-    tileCollision(sprite, tile){
-      sprite.isFloor = true;
-      // console.log("tileCollision");
+    tileCollision(player, tile){
+
+      player.isFloor = true;
+      player.beforeVecX = 0;
+      player.beforeVecY = 0;
+      // console.log("tile="+tile);
+    }
+    tileActionCollision(sprite, tile){
+
+      
+      console.log("tile="+tile);
+
+    }
+
+    hitCoin(player, tile){
+
+      console.log("hitCoin");
+
+      // if(player.beforeVecX === 0 && player.beforeVecY === 0){
+      //   if(player.body.velocity.x < 0 ){
+      //     player.beforeVecX = player.body.velocity.x*-1;
+      //   }else{
+      //     player.beforeVecX = player.body.velocity.x;
+      //   }
+      //   if(player.body.velocity.y < 0 ){
+      //     player.beforeVecY = player.body.velocity.y*-1;
+      //   }else{          
+      //     player.beforeVecY = player.body.velocity.y;
+      //   }
+        // player.body.setVelocityX(player.beforeVecX*-1);
+        // player.body.setVelocityY(player.beforeVecY*-1);
+      // }
     }
     parseObjectLayers() {
         console.log(this.tileset);
@@ -165,6 +245,37 @@ class GameScene extends Phaser.Scene {
                         });
                         this.enemyGroup.add(enemyObject);
                         break;
+                    case 'brain':
+                        enemyObject = new Brain({
+                            scene: this,
+                            key: 'brain',
+                            x: enemy.x,
+                            y: enemy.y
+                        });
+                        this.enemyGroup.add(enemyObject);
+                        break;                      
+                    default:
+                        // console.error('Unknown:', enemy.name); // eslint-disable-line no-console
+                        break;
+                }
+            }
+        );
+
+        this.map.getObjectLayer('items').objects.forEach(
+            (item) => {
+                let itemObject;
+
+                switch (item.name) {
+                    case 'heart':
+                    console.log("heart  AAAA");
+                        itemObject = new Heart({
+                            scene: this,
+                            key: 'heart',
+                            x: item.x,
+                            y: item.y
+                        });
+                        this.itemGroup.add(itemObject);
+                        break;                    
                     default:
                         // console.error('Unknown:', enemy.name); // eslint-disable-line no-console
                         break;
