@@ -23,7 +23,7 @@ export default class Brain extends Enemy {
     this.alive = true;
     this.damage = 1;
     this.attack_bomb_count = 0;
-    this.attackPoint = 50;
+    this.attackPoint = 1;
 
     // config.scene.tweens.add({
     //     targets: this.container,

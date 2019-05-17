@@ -26,8 +26,8 @@ class BootScene extends Phaser.Scene {
 
         this.load.image('lemming', 'assets/images/bomb.png');
 
-        this.load.image('tiles', 'assets/images/tilesets.png');
-        this.load.tilemapTiledJSON('map', 'assets/images/tilemap.json');
+        this.load.image('tiles', 'assets/images/tileset.png');
+        this.load.tilemapTiledJSON('map', 'assets/tilemaps/tilemap.json');
         //spritesheetは画像のサイズを合わせないとframe errorになる...
         this.load.spritesheet('laser', 'assets/images/bullet_sprite.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('player', 'assets/images/rockman_sprite.png', { frameWidth: 64, frameHeight: 64 });

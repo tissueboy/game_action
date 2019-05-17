@@ -49,9 +49,9 @@ class TitleScene extends Phaser.Scene {
 
         // this.startKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
 
-        this.input.on('pointerdown', () => {
-            this.startGame();
-        });
+        // this.input.on('pointerdown', () => {
+        //     this.startGame();
+        // });
     }
 
     update(time, delta) {

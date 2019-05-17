@@ -163,7 +163,7 @@ class GameScene extends Phaser.Scene {
       }
       this.physics.world.overlap(this.player,this.itemGroup,
         function( player,item){
-          console.log("overlap");
+          // console.log("overlap");
           item.hasEffect(player,item);
         }
       );
@@ -205,7 +205,7 @@ class GameScene extends Phaser.Scene {
     tileActionCollision(sprite, tile){
 
       
-      console.log("tile="+tile);
+      // console.log("tile="+tile);
 
     }
 

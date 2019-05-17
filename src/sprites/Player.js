@@ -16,10 +16,9 @@ export default class Player extends Phaser.GameObjects.Sprite {
 
         this.body.gravity.x = 0;
         this.body.gravity.y = 0;
-        this.wirePower = 2;
+        this.wirePower = 300;
         this.countTouch = 0;
         this.jumpTimer = 0;
-        this.jumping = false;
         this.delta = 0;
         this.derection = "right";
         this.isDamege = false;
@@ -27,13 +26,21 @@ export default class Player extends Phaser.GameObjects.Sprite {
         this.rx = 0;
         this.ry = 0;
         this.attackPoint = 1;
-        // this.body.isCircle= true;
         this.beforeVecX = 0;
         this.beforeVecY = 0;
-        // this.body.setOffset(10, 10, 10, 10);
-
-
-
+        this.degree = 10;
+        this.touchStart = {
+          x:0,
+          y:0
+        };
+        this.touchMove = {
+          x:0,
+          y:0
+        };
+        this.anglePlayer = {
+          x:0,
+          y:0
+        }
         this.scene.anims.create({
           key: 'waitLeftAnime',
           frames: this.scene.anims.generateFrameNumbers(config.key, { start: 7, end: 7 }),
@@ -54,6 +61,14 @@ export default class Player extends Phaser.GameObjects.Sprite {
       this.arrow.lineStyle(2, 0x00FF00);
 
       this.normalAngle;
+      this.tang = 0;
+
+      this.BetweenPoints = Phaser.Math.Angle.BetweenPoints;
+      this.SetToAngle = Phaser.Geom.Line.SetToAngle;
+      this.velocityFromRotation = this.scene.physics.velocityFromRotation;
+      this.velocityShot = new Phaser.Math.Vector2();
+
+      this.angleShot = 0;
 
     }
 
@@ -64,11 +79,10 @@ export default class Player extends Phaser.GameObjects.Sprite {
           player.collide(enemy);
         }
       );
+
     }
 
     update(keys, time, delta) {
-
-      console.log("this.alive="+this.alive);
 
       if(this.alive === false){
         return;
@@ -97,52 +111,36 @@ export default class Player extends Phaser.GameObjects.Sprite {
         */
         this.rx = keys.TOUCH_START_X - keys.TOUCH_MOVE_X;
         this.ry = keys.TOUCH_START_Y - keys.TOUCH_MOVE_Y;
+        this.touchStart.x = keys.TOUCH_START_X;
+        this.touchStart.y = keys.TOUCH_START_Y;
+        this.touchMove.x = keys.TOUCH_MOVE_X;
+        this.touchMove.y = keys.TOUCH_MOVE_Y;
+        
+        this.angleShot = this.BetweenPoints(this.touchMove,this.touchStart);
 
       }
-      // console.log("keys.isRELEASE="+keys.isRELEASE);
-
-
-      // console.log("velocity.x="+this.body.velocity.x+"/velocity.y="+this.body.velocity.y);
-
-
 
       if(keys.isTOUCH === false && keys.isRELEASE === true){
-        //反射ありの場合
-        // if(this.beforeVecX !== 0 || this.beforeVecY !== 0){
 
-        //   // this.beforeVecX = this.beforeVecX*-1;
+        this.velocityFromRotation(this.angleShot, this.wirePower, this.velocityShot);
 
-        //   this.body.setVelocityX(this.beforeVecX);
-        //   this.body.setVelocityY(this.beforeVecY);  
-
-        // }else{
-          this.body.setVelocityX(this.rx*this.wirePower);
-          this.body.setVelocityY(this.ry*this.wirePower);
-        // }
+        this.body.setVelocity(this.velocityShot.x, this.velocityShot.y);
 
       }
-
-
 
       if(this.isFloor === true){
 
-        // console.log("keys.isTOUCH");
-
         keys.isRELEASE = false;
-
 
         this.body.velocity.x = 0;
         this.body.velocity.y = 0;
+
+        // this.tang= 0;
 
       }else{
 
         this.body.gravity.y = -800;
 
-      }
-
-      if(this.body.velocity.x !== 0 || this.body.velocity.y !== 0){
-        // keys.isRELEASE = false;
-        // console.log("aaaaaaaaa");
       }
 
     }
@@ -158,7 +156,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
       this.countTouch++;     
     }
     damage(){
-      console.log("damage");
+
       this.isDamege = true;
       if(this.derection === "left"){
         this.anims.play('damageLeftAnime', true);
@@ -172,8 +170,6 @@ export default class Player extends Phaser.GameObjects.Sprite {
       this.alive = false;
       this.on('animationcomplete', function() {
         console.log("animationcomplete");
-        
-        // this.destroy();
       });
     }
     collide(obj){
