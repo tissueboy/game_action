@@ -22,7 +22,6 @@ class GameScene extends Phaser.Scene {
 
       this.tileset = this.map.addTilesetImage('tileset', 'tiles');
 
-      // this.groundLayer = this.map.createStaticLayer("ground", this.tileset, 0, 0);
       this.groundLayer = this.map.createDynamicLayer('ground', this.tileset, 0, 0);
       this.groundLayer.setCollisionBetween(0, 2);
       this.groundLayer.setCollisionByProperty({ collides: true });
@@ -32,8 +31,6 @@ class GameScene extends Phaser.Scene {
       this.actionLayer = this.map.createDynamicLayer('action', this.tileset, 0, 0);
       this.actionLayer.setCollisionBetween(3, 5);
       this.actionLayer.setCollisionByProperty({ collides: true });
-
-
 
 
       this.enemyGroup = this.add.group();
@@ -83,7 +80,6 @@ class GameScene extends Phaser.Scene {
         this.keys.TOUCH_START_X = pointer.x;
         this.keys.TOUCH_START_Y = pointer.y;
         this.keys.isTOUCH = true;
-        // this.keys.isRELEASE = false;
       }, this);
 
       this.input.on('pointerup', function (pointer) {
@@ -123,9 +119,7 @@ class GameScene extends Phaser.Scene {
 
       this.score = 30;
 
-      var scoreText;
 
-      // this.scene.add.text(12, 12, 'Score: 0', { font: "24px", fill: "#000" });
 
       this.scoreText = this.add.text(100, 100, this.score).setScrollFactor(0, 0);
       this.hpText = this.add.text(400, 100, this.player.hp).setScrollFactor(0, 0);
@@ -134,14 +128,27 @@ class GameScene extends Phaser.Scene {
       this.attack_count = 0;
 
 
+      this.btn_stop = this.add.sprite(20, 20, 'btn_stop').setScrollFactor(0, 0).setInteractive();
+      this.btn_stop_flg = false;
+
+      this.btn_stop.on('pointerdown', function (pointer) {
+        if(this.scene.btn_stop_flg === false){
+          this.scene.btn_stop_flg = true;
+          this.scene.physics.world.pause();
+        }else{
+          this.scene.btn_stop_flg = false;
+          this.scene.physics.world.resume();
+        }
+
+      });
     }
+
     update(time, delta) {
+
 
       this.player.update(this.keys, time, delta);
 
       this.player.isFloor = false;
-
-
 
       this.enemyGroup.children.entries.forEach(
           (sprite) => {
@@ -154,6 +161,7 @@ class GameScene extends Phaser.Scene {
           this.physics.world.overlap(this.player, this.enemyGroup,
             function(player,enemy){
               enemy.collide(player,enemy);
+              // enemy.damage();
             }
           );
         }
@@ -163,15 +171,9 @@ class GameScene extends Phaser.Scene {
       }
       this.physics.world.overlap(this.player,this.itemGroup,
         function( player,item){
-          // console.log("overlap");
           item.hasEffect(player,item);
         }
       );
-      // this.itemGroup.children.entries.forEach(
-      //     (sprite) => {
-      //         sprite.update(time, delta);
-      //     }
-      // );
 
     }
 
@@ -183,7 +185,6 @@ class GameScene extends Phaser.Scene {
           flg = true;
         }
       );
-      // console.log("this.collideCheck() flg="+flg);
 
       return flg;
 
@@ -200,33 +201,13 @@ class GameScene extends Phaser.Scene {
       player.isFloor = true;
       player.beforeVecX = 0;
       player.beforeVecY = 0;
-      // console.log("tile="+tile);
-    }
-    tileActionCollision(sprite, tile){
-
-      
-      // console.log("tile="+tile);
-
     }
 
     hitCoin(player, tile){
 
       console.log("hitCoin");
 
-      // if(player.beforeVecX === 0 && player.beforeVecY === 0){
-      //   if(player.body.velocity.x < 0 ){
-      //     player.beforeVecX = player.body.velocity.x*-1;
-      //   }else{
-      //     player.beforeVecX = player.body.velocity.x;
-      //   }
-      //   if(player.body.velocity.y < 0 ){
-      //     player.beforeVecY = player.body.velocity.y*-1;
-      //   }else{          
-      //     player.beforeVecY = player.body.velocity.y;
-      //   }
-        // player.body.setVelocityX(player.beforeVecX*-1);
-        // player.body.setVelocityY(player.beforeVecY*-1);
-      // }
+
     }
     parseObjectLayers() {
         console.log(this.tileset);

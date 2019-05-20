@@ -8,6 +8,8 @@ export default class Player extends Phaser.GameObjects.Sprite {
 
         console.log(this.scene);
 
+        console.log("config.key="+config.key);
+
         config.scene.physics.world.enable(this);
         config.scene.add.existing(this);
 
@@ -16,7 +18,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
 
         this.body.gravity.x = 0;
         this.body.gravity.y = 0;
-        this.wirePower = 300;
+        this.wirePower = 800;
         this.countTouch = 0;
         this.jumpTimer = 0;
         this.delta = 0;
@@ -29,6 +31,8 @@ export default class Player extends Phaser.GameObjects.Sprite {
         this.beforeVecX = 0;
         this.beforeVecY = 0;
         this.degree = 10;
+        this.flgDamage = false;
+        // this.damageFlashCount = 0;
         this.touchStart = {
           x:0,
           y:0
@@ -53,7 +57,18 @@ export default class Player extends Phaser.GameObjects.Sprite {
           frameRate: 10,
           repeat: 0
         });
-
+        this.scene.anims.create({
+          key: 'damageLeftAnime',
+          frames: this.scene.anims.generateFrameNumbers(config.key, { start: 5, end: 5 }),
+          frameRate: 10,
+          repeat: -1
+        });
+        this.scene.anims.create({
+          key: 'damageRightAnime',
+          frames: this.scene.anims.generateFrameNumbers(config.key, { start: 0, end: 0 }),
+          frameRate: 10,
+          repeat: -1
+        });
       this.graph = this.scene.add.graphics({ lineStyle: { width: 4, color: 0xaa00aa } });
       this.graph.lineStyle(2, 0x00aa00);
 
@@ -79,15 +94,26 @@ export default class Player extends Phaser.GameObjects.Sprite {
           player.collide(enemy);
         }
       );
-
+      // this.on('pointerdown', function (pointer) {
+      //   console.log("btn_stop");
+      // });
     }
 
     update(keys, time, delta) {
 
-      if(this.alive === false){
-        return;
+      if(this.isDamege === true){
+        if(this.derection === "left"){
+          this.anims.play('damageLeftAnime', true);
+        }
+        if(this.derection === "right"){
+          this.anims.play('damageRightAnime', true);
+        }        
       }else{
-        this.anims.play('waitLeftAnime', true);
+        if(this.alive === false){
+          return;
+        }else{
+          this.anims.play('waitLeftAnime', true);
+        }        
       }
 
       this.jumpTimer -= delta;
@@ -155,15 +181,31 @@ export default class Player extends Phaser.GameObjects.Sprite {
       this.scene.playerLasers.add(laser);   
       this.countTouch++;     
     }
+
     damage(){
 
+      console.log("damage player");
+
       this.isDamege = true;
-      if(this.derection === "left"){
-        this.anims.play('damageLeftAnime', true);
+
+      var player = this;
+      var tween = this.scene.tweens.add({
+        targets: this,
+        alpha: 0.1,
+        duration: 400,
+        loop: 10,
+        // onComplete: this.onCompleteHandler(),
+        // onCompleteParams: [ this ],
+        // paused: true
+      });
+      var stop = function(){
+        console.log("functoin stop");
+        tween.stop();
+        console.log("player="+player);
+        player.alpha = 1;
+        player.isDamege = false;
       }
-      if(this.derection === "right"){
-        this.anims.play('damageRightAnime', true);
-      }
+      setTimeout(stop, 1000);
     }
     explode(){
       this.anims.play('explosionAnime', true);

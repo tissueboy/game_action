@@ -11,14 +11,7 @@ export default class Heart extends Item {
   create(){
 
   }
-  // update(){
-  //   console.log("player,item");
-  //   this.scene.physics.world.overlap(this.scene.player, this,hasEffect(),
-  //     function(player,item){
-  //       console.log("player,item");
-  //     }
-  //   );
-  // }
+
   hasEffect(player,item){
     console.log("item.recoveryPoint = "+item.recoveryPoint);
     player.hp = player.hp + item.recoveryPoint;

@@ -25,6 +25,7 @@ class BootScene extends Phaser.Scene {
         });
 
         this.load.image('lemming', 'assets/images/bomb.png');
+        this.load.image('btn_stop', 'assets/images/btn_stop.png');
 
         this.load.image('tiles', 'assets/images/tileset.png');
         this.load.tilemapTiledJSON('map', 'assets/tilemaps/tilemap.json');

@@ -18,7 +18,7 @@ export default class Ika extends Enemy {
     });
     this.anims.play('waitIkaAnime', true);
 
-    this.hp = 1;
+    this.hp = 3;
 
     this.moveArea = 40;
     this.dispPositionX_Left  = this.x - this.moveArea;
@@ -54,14 +54,10 @@ export default class Ika extends Enemy {
   }
 
 
-  // collide(){
-  //   console.log("attack!!!!!!!!!!!!!!");
-  //   this.scene.player
-  // }
-
   update(){
     if(!this.activated()){
     }
   }
+
 
 }

@@ -425,7 +425,7 @@
   <object id="22" name="ika" x="478.03" y="213.03"/>
  </objectgroup>
  <objectgroup id="14" name="items">
-  <object id="23" name="heart" x="460.606" y="603.03">
+  <object id="23" name="heart" x="400.606" y="521.03">
    <point/>
   </object>
  </objectgroup>
