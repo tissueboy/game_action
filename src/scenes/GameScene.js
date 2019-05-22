@@ -4,8 +4,11 @@ import Player from '../sprites/Player';
 import Enemy from '../sprites/Enemy';
 import Ika from '../sprites/Ika';
 import Brain from '../sprites/Brain';
+import Cloud from '../sprites/Cloud';
 import Item from '../sprites/Item';
 import Heart from '../sprites/Heart';
+import EnemyShot from '../sprites/EnemyShot';
+
 // import Fire from '../sprites/Fire';
 
 class GameScene extends Phaser.Scene {
@@ -141,6 +144,8 @@ class GameScene extends Phaser.Scene {
         }
 
       });
+
+
     }
 
     update(time, delta) {
@@ -235,6 +240,15 @@ class GameScene extends Phaser.Scene {
                         });
                         this.enemyGroup.add(enemyObject);
                         break;                      
+                    case 'cloud':
+                        enemyObject = new Cloud({
+                            scene: this,
+                            key: 'cloud',
+                            x: enemy.x,
+                            y: enemy.y
+                        });
+                        this.enemyGroup.add(enemyObject);
+                        break; 
                     default:
                         // console.error('Unknown:', enemy.name); // eslint-disable-line no-console
                         break;

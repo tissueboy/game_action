@@ -10,12 +10,7 @@ export default class Ika extends Enemy {
         frameRate: 10,
         repeat: -1
     });
-    this.scene.anims.create({
-        key: 'explosionAnime',
-        frames: this.scene.anims.generateFrameNumbers('explosion', { start: 0, end: 16 }),
-        frameRate: 10,
-        repeat: 0
-    });
+
     this.anims.play('waitIkaAnime', true);
 
     this.hp = 3;

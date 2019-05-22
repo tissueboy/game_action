@@ -51,28 +51,6 @@ export default class Brain extends Enemy {
     }
   }
 
-  collideContainerCheck(){
-
-    var flg = false;
-    this.scene.physics.world.overlap(this.scene.player, this.container,
-      function(player,enemy){
-        flg = true;
-      }
-    );
-
-    return flg;
-
-  }
-  playerAddDamage(player,enemy){
-    if(player.type === 'player'){
-      player.hp = player.hp - this.attackPoint;
-      player.damage();
-      this.scene.updateHp(player.hp);
-    }
-    if(player.hp <= 0 ){
-      player.explode();
-      console.log("=====game over-----");
-    }
-  }  
+ 
 
 }

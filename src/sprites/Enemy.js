@@ -19,7 +19,12 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     this.attackPoint = 1;
     this.isDamege = false;
     // this.tween;
-
+    this.scene.anims.create({
+        key: 'explosionAnimeEnemy',
+        frames: this.scene.anims.generateFrameNumbers('explosion', { start: 0, end: 16 }),
+        frameRate: 10,
+        repeat: 0
+    });
   }
 
   explode(){
@@ -27,7 +32,7 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     this.setAlpha(1);
     this.alpha = 1;
 
-    this.anims.play('explosionAnime', true);
+    this.anims.play('explosionAnimeEnemy', true);
 
     if(this.container){
       this.container.destroy();
@@ -54,8 +59,6 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
 
   damage(){
 
-    console.log("damage enemy");
-
     this.isDamege = true;
 
     var enemy = this;
@@ -65,14 +68,36 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
       duration: 200,
       loop: 20,
     });
-    // var tween = this.tween;
+    
     var stop = function(){
-      console.log("functoin stop");
       tween.stop();
-      // console.log("player="+player);
       enemy.alpha = 1;
       enemy.isDamege = false;
     }
     setTimeout(stop, 1000);
   }
+  playerAddDamage(player,enemy){
+    if(player.type === 'player'){
+      player.hp = player.hp - this.attackPoint;
+      player.damage();
+      this.scene.updateHp(player.hp);
+    }
+    if(player.hp <= 0 ){
+      player.explode();
+      console.log("=====game over-----");
+    }
+  }  
+  collideContainerCheck(){
+
+    var flg = false;
+    this.scene.physics.world.overlap(this.scene.player, this.container,
+      function(player,enemy){
+        flg = true;
+      }
+    );
+
+    return flg;
+
+  }
+
 }
