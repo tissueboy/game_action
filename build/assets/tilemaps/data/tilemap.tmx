@@ -423,7 +423,7 @@
   <object id="19" name="brain" x="352" y="192"/>
   <object id="20" name="ika" x="248" y="756"/>
   <object id="22" name="ika" x="478.03" y="213.03"/>
-  <object id="24" name="cloud" x="74" y="356"/>
+  <object id="24" name="cloud" x="99" y="350"/>
  </objectgroup>
  <objectgroup id="14" name="items">
   <object id="23" name="heart" x="400.606" y="521.03">

@@ -39,8 +39,15 @@ export default class EnemyShot extends Phaser.GameObjects.Sprite {
     this.scene.physics.add.overlap(this, this.scene.player, (shot, player) => {
       player.damage();
       shot.collide(player,shot);
-      
     });
+    this.scene.physics.add.collider(this, this.scene.groundLayer,this.collideLayer);
+
+    this.scene.physics.add.collider(this, this.scene.groundLayer,(shot, player) => {
+      shot.collideLayer(shot)
+    });
+
+    // this.physics.add.collider(this.player, this.groundLayer, this.tileCollision);
+
 
   }
 
@@ -51,5 +58,9 @@ export default class EnemyShot extends Phaser.GameObjects.Sprite {
       this.scene.updateHp(player.hp);
     }
     this.destroy();
+  }
+  collideLayer(shot){
+    console.log("collideLayer");
+    shot.destroy();
   }
 }
