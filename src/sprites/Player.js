@@ -148,7 +148,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
         this.touchMove.x = keys.TOUCH_MOVE_X;
         this.touchMove.y = keys.TOUCH_MOVE_Y;
         
-        this.angleShot = this.BetweenPoints(this.touchMove,this.touchStart);
+        this.angleShot = this.BetweenPoints(this.touchStart,this.touchMove);
 
       }
 
