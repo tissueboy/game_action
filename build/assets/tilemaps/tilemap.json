@@ -62,6 +62,17 @@
                  "width":0,
                  "x":478.03,
                  "y":213.03
+                }, 
+                {
+                 "height":0,
+                 "id":24,
+                 "name":"cloud",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":74,
+                 "y":356
                 }],
          "opacity":1,
          "properties":[
@@ -89,8 +100,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":460.606,
-                 "y":603.03
+                 "x":400.606,
+                 "y":521.03
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -99,7 +110,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":24,
+ "nextobjectid":25,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.2.3",

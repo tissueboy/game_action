@@ -132,6 +132,7 @@ class GameScene extends Phaser.Scene {
 
 
       this.btn_stop = this.add.sprite(20, 20, 'btn_stop').setScrollFactor(0, 0).setInteractive();
+      
       this.btn_stop_flg = false;
 
       this.btn_stop.on('pointerdown', function (pointer) {
@@ -211,7 +212,6 @@ class GameScene extends Phaser.Scene {
     hitCoin(player, tile){
 
       console.log("hitCoin");
-
 
     }
     parseObjectLayers() {
