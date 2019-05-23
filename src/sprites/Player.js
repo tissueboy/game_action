@@ -135,8 +135,14 @@ export default class Player extends Phaser.GameObjects.Sprite {
         rx = -1 * (fx - px) = px - fx
         ry = -1 * (fy - py) = py - fy
         */
+        /*
+        ================
+        入力と逆（引っ張り系）
+        ================
         this.rx = keys.TOUCH_START_X - keys.TOUCH_MOVE_X;
         this.ry = keys.TOUCH_START_Y - keys.TOUCH_MOVE_Y;
+        */
+
         this.touchStart.x = keys.TOUCH_START_X;
         this.touchStart.y = keys.TOUCH_START_Y;
         this.touchMove.x = keys.TOUCH_MOVE_X;
@@ -146,6 +152,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
 
       }
 
+
       if(keys.isTOUCH === false && keys.isRELEASE === true){
 
         this.velocityFromRotation(this.angleShot, this.wirePower, this.velocityShot);
@@ -153,6 +160,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
         this.body.setVelocity(this.velocityShot.x, this.velocityShot.y);
 
       }
+
 
       if(this.isFloor === true){
 

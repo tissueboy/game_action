@@ -46,9 +46,6 @@ export default class EnemyShot extends Phaser.GameObjects.Sprite {
       shot.collideLayer(shot)
     });
 
-    // this.physics.add.collider(this.player, this.groundLayer, this.tileCollision);
-
-
   }
 
   collide(player,shot){
